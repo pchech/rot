@@ -10,7 +10,7 @@ server = Flask(__name__)
 def sendMessage():
 	url = 'https://api.telegram.org/bot{}/sendMessage'.format(token)
 	data = {
-		'chat_id':'125884788',
+		'chat_id':os.environ.get('CHAT_ID'),
 		'text':'Hello! How are you ?'
 	}
 	rsp = requests.post(url = url,data=data)
