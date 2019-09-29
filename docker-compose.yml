@@ -1,0 +1,17 @@
+version: "3"
+services:
+  tg:
+    build: app
+    image: pchech/rot
+    environment:
+      - TOKEN=<Bot API Token>
+      - CHAT_ID=<Chat id>
+    ports:
+      - "5000:5000"
+  scy:
+    build: scyapi
+    image: pchech/scyapi
+    environment:
+      - TOKEN=<Rapid API Token>
+    ports:
+      - "5020:5020"
