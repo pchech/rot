@@ -1,6 +1,6 @@
 version: "3"
 services:
-  tg:
+  message:
     build: app
     image: pchech/rot
     environment:
@@ -8,7 +8,7 @@ services:
       - CHAT_ID=<Chat id>
     ports:
       - "5000:5000"
-  scy:
+  polling:
     build: scyapi
     image: pchech/scyapi
     environment:

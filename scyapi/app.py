@@ -8,7 +8,7 @@ from time import sleep
 import os
 
 def sendData(price_list):
-	url = 'http://tg:5000/rot'
+	url = 'http://message:5000/rot'
 	data = {'message':price_list}
 	rsp=requests.post(url=url,data=data)
 
