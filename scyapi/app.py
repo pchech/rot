@@ -3,7 +3,7 @@ import json
 import traceback
 from datetime import datetime
 from utils import showPrice
-from scyapi import *
+import scyapi
 from time import sleep
 import os
 
@@ -13,18 +13,19 @@ def sendData(price_list):
 	rsp=requests.post(url=url,data=data)
 
 if __name__=="__main__":
-	session=getSession()
-	pollData(session)
-	sendData(showPrice(price_list))
-	#print(showPrice(price_list))
+	session=scyapi.getSession()
+	scyapi.pollData(session)
+	sendData(showPrice(scyapi.price_list))
+	#print(showPrice(scyapi.price_list))
 	while True:
-		print("Start {}".format(datetime.now()))
-		changed=0
-		sleep(1800)
+		scyapi.changed=0
+		sleep(300)
+		#sendData("Start {}".format(datetime.now()))
 		try:
-			session=getSession()
-			pollData(session)
-			if changed:
-				sendData(showPrice(price_list))
+			session=scyapi.getSession()
+			scyapi.pollData(session)
+			#sendData("Changed {}".format(scyapi.changed))
+			if scyapi.changed:
+				sendData(showPrice(scyapi.price_list))
 		except Exception as e:
  			sendData(traceback.format_exc())

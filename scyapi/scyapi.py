@@ -6,6 +6,7 @@ import os
 token = os.environ.get('TOKEN')
 host = 'https://skyscanner-skyscanner-flight-search-v1.p.rapidapi.com'
 price_list = {}
+
 changed = 0
 
 def getSession():
@@ -29,7 +30,7 @@ def pollData(session):
 	poll_path = 'apiservices/pricing/uk2/v1.0'
 	poll_url = '{}/{}/{}'.format(host,poll_path,session)
 
-	carrier_list = ['su','s7','u6']
+	carrier_list = ['su','s7','u6','dp']
 	for car in carrier_list:
 		querystring = {"sortType":"price","sortOrder":"asc","stops":"0","pageSize":1,"pageIndex":0,'includecarriers':car}
 
@@ -54,7 +55,8 @@ def pollData(session):
 					price_o['start']=datetime.strptime(start,'%Y-%m-%dT%H:%M:%S').strftime('%d-%m-%Y %H:%M:%S')
 					price_o['end']=datetime.strptime(end,'%Y-%m-%dT%H:%M:%S').strftime('%d-%m-%Y %H:%M:%S')
 			try:
-				if price < price_list[car]['price']:
+				global changed
+				if price != price_list[car]['price']:
 					changed = 1        
 					price_list[car]=price_o
 			except KeyError:
