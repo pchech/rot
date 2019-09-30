@@ -1,5 +1,13 @@
-Запуск контейнера на 5000 порту:
+Запуск контейнеров:
 
-docker build -t pchech/rot .
+docker-compose up --build
 
-docker run -p 5000:5000 -e TOKEN=<bot_token> -e CHAT_ID=<chat_id> pchech/rot
+Контейнер rot: рассылка в телеграм
+
+TOKEN - токен бота
+
+CHAT_ID - id чата
+
+Контейнер scyapi: сбор данных о билетах
+
+TOKEN - токен RAPID API
