@@ -6,15 +6,15 @@ import os
 token = os.environ.get('TOKEN')
 host = 'https://skyscanner-skyscanner-flight-search-v1.p.rapidapi.com'
 price_list = {}
+originPlace='MOSC-sky'
+destinationPlace='LED-sky'
 
-changed = 0
 
 def getSession():
 	session_path = 'apiservices/pricing/v1.0'
 	session_url = '{}/{}'.format(host,session_path)
 	
-	originPlace='MOSC-sky'
-	destinationPlace='LED-sky'
+	
 	outboundDate=(datetime.now()+timedelta(days=1)).strftime('%Y-%m-%d')
 	payload = "cabinClass=economy&children=0&infants=0&country=RU&currency=RUB&locale=ru-RU&originPlace={}&destinationPlace={}&outboundDate={}&adults=1".format(originPlace,destinationPlace,outboundDate)
 	headers = {
@@ -42,6 +42,8 @@ def pollData(session):
 		response = requests.request("GET", poll_url, headers=headers, params=querystring)
 
 		d = json.loads(response.text)
+		if d['Itineraries'] == []:
+			price_list.pop(car)
 		for leg in d['Itineraries']:
 			price_o={}
 			price = leg['PricingOptions'][0]['Price']
@@ -54,12 +56,15 @@ def pollData(session):
 					end=l['Arrival']
 					price_o['start']=datetime.strptime(start,'%Y-%m-%dT%H:%M:%S').strftime('%d-%m-%Y %H:%M:%S')
 					price_o['end']=datetime.strptime(end,'%Y-%m-%dT%H:%M:%S').strftime('%d-%m-%Y %H:%M:%S')
-			try:
-				global changed
-				if price != price_list[car]['price']:
-					changed = 1        
-					price_list[car]=price_o
-			except KeyError:
-				changed = 1 
+					price_o['dep']=originPlace
+					price_o['arr']=destinationPlace
 				price_list[car]=price_o
+			#try:
+				
+			#	if price != price_list[car]['price'] or (datetime.now()+timedelta(days=1)).strftime('%Y-%m-%d')!=datetime.strptime(price_list[car]['start'],'%d-%m-%Y %H:%M:%S').strftime('%Y-%m-%d'):
+			#		changed = 1        
+				#	price_list[car]=price_o
+			#except KeyError:
+			#	changed = 1 
+				#price_list[car]=price_o
 		
